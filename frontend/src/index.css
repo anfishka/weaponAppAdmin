@@ -1,0 +1,370 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #252525;
+  color: #ddd;
+}
+
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+a:hover {
+  color: white;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Контейнер для общего выравнивания */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Header (шапка) */
+.header {
+  background-color: #BC4A00;
+  color: white;
+  padding: 10px 0;
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.logo a {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+.nav {
+  display: flex;
+  gap: 20px; /* Расстояние между ссылками */
+}
+
+.nav a {
+  color: white;
+  font-size: 1rem;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+}
+
+/* Footer (подвал) */
+.footer {
+  background-color: #f8f9fa;
+  color: #333;
+  padding: 20px 0;
+  border-top: 1px solid #ddd;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.footer-nav {
+  display: flex;
+  gap: 15px;
+}
+
+.footer-nav a {
+  font-size: 0.9rem;
+  color: rgb(0, 120, 95);
+}
+
+.footer-nav a:hover {
+  text-decoration: underline;
+}
+
+/* Основной контент */
+.content {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Список карточек */
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Адаптивные колонки */
+  gap: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+  justify-content: center;
+  position: relative;
+  margin-top: 20px;
+}
+
+/* Карточка товара */
+.product-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%; /* Занимает всю ширину */
+  max-width: 300px; /* Ограничение ширины */
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+/* Изображения в карточке */
+.product-card img {
+  width: 100%;
+  height: 200px; /* Фиксированная высота для изображения */
+  object-fit: cover; /* Пропорции изображения */
+}
+
+/* Текстовые элементы карточки */
+.product-card .product-details {
+  margin: 16px 0;
+}
+
+.product-card .product-name {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.product-card .product-category {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.product-card .product-description {
+  font-size: 0.95em;
+  margin: 8px 0;
+  color: #333;
+}
+
+/* Кнопка в карточке */
+.product-card button {
+  background-color: rgb(0, 120, 95);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.product-card button:hover {
+  background-color: rgb(90, 100, 85);
+}
+
+/* Ссылка "Подробнее" */
+.details-link {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: rgb(0, 120, 95);
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.details-link:hover {
+  background-color: rgb(110, 81, 67);
+}
+
+/* Пагинация */
+.pagination button {
+  margin: 0 5px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background-color: white;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: rgb(0, 120, 95);
+  color: white;
+  border-color: rgb(0, 120, 95);
+}
+
+
+/* Сортировка (Dropdown) */
+.sort-dropdown {
+  display: inline-block;
+  position: absolute;
+  top: 10px; /* Расстояние от верхнего края */
+  right: 10px;
+  font-family: Arial, sans-serif;
+ margin: 40px 10px 10px;
+
+}
+
+/* Стили для select */
+.sort-dropdown select {
+  appearance: none; /* Убираем стандартные стили браузера */
+  -webkit-appearance: none; /* Для Safari */
+  -moz-appearance: none; /* Для Firefox */
+  background-color: white;
+  border: 2px solid rgb(0, 120, 95);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  outline: none;
+  width: 150px;
+  line-height: 1.5; /* Устанавливаем высоту строки для выравнивания */
+  box-sizing: border-box;
+
+}
+.sort-dropdown::after {
+  content: '▼'; /* Стрелка вниз */
+  font-size: 12px; /* Размер стрелки */
+  color: #333;
+  position: absolute;
+  right: 12px; /* Расположение стрелки справа */
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* Убираем возможность взаимодействия */
+}
+/* Фокусное состояние */
+.sort-dropdown select:focus {
+  border-color: rgb(0, 120, 95);
+  box-shadow: 0 0 5px rgba(51, 153, 204, 0.5);
+}
+.sort-label{
+  display: block;
+}
+
+.ant-menu-item-selected {
+  background-color: rgb(0, 120, 95) !important; /* Ваш желаемый цвет */
+}
+
+/* Цвет текста активного элемента */
+.ant-menu-item-selected a {
+  color: #ffffff !important; /* Ваш желаемый цвет текста */
+}
+
+.ant-input-search-button {
+  background-color: rgb(0, 120, 95); /* Устанавливаем ваш цвет */
+  border-color: rgb(0, 120, 95); /* Устанавливаем тот же цвет для рамки */
+  color: white; /* Цвет текста кнопки */
+}
+
+/* Цвет кнопки при наведении */
+.ant-input-search-button:hover {
+  background-color: rgb(0, 100, 80)!important; /* Более тёмный оттенок при наведении */
+  border-color: rgb(0, 100, 80);
+}
+
+/* Цвет кнопки при клике (активное состояние) */
+.ant-input-search-button:active {
+  background-color: rgb(0, 80, 65)!important;
+  border-color: rgb(0, 80, 65);
+}
+
+.table-row-light {
+  background-color: rgb(37, 37, 37)!important; /* Светлый фон для строк */
+  color: #eaeaea;
+}
+.table-row-light:hover {
+  background-color: rgb(37, 37, 37)!important; /* Светлый фон для строк */
+  color: #2b2a2a;
+}
+.table-row-dark {
+  background-color: #001529; /* Тёмный фон для строк */
+  color: #eaeaea;
+}
+.table-row-dark :hover{
+  background-color: #001529; /* Тёмный фон для строк */
+  color: #2c2b2b;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background-color: rgb(37, 37, 37); /* Цвет фона при наведении */
+  color: rgb(29, 27, 27); /* Цвет текста при наведении */
+}
+
+
+/* Отключить ховер для отдельных элементов внутри строки */
+.ant-table-tbody > tr:hover .ant-tag {
+  background-color: inherit; /* Тег сохраняет свой цвет */
+  color: inherit; /* Тег сохраняет свой цвет текста */
+}
+
+.ant-card {
+  background-color:  #1e1e1e; /* Фон карточки */
+ 
+  border-radius: 8px;
+}
+
+.ant-form-item-label > label {
+  color: white; /* Цвет заголовков формы */
+}
+
+
+.ant-btn-primary {
+  background-color: rgb(0, 120, 95); /* Цвет кнопки */
+  border-color: rgb(0, 120, 95);
+}
+
+.ant-btn-primary:hover {
+  background-color: rgb(0, 100, 80); /* Цвет при наведении */
+  border-color: rgb(0, 100, 80);
+}.ant-card {
+  background-color: #252525; /* Фон карточки */
+  
+  border-radius: 8px;
+}
+
+.ant-form-item-label > label {
+  color: white; /* Цвет заголовков формы */
+}
+
+.ant-btn-primary {
+  background-color: rgb(0, 120, 95); /* Цвет кнопки */
+  border-color: rgb(0, 120, 95);
+}
+
+.ant-btn-primary:hover {
+  background-color: rgb(0, 100, 80); /* Цвет при наведении */
+  border-color: rgb(0, 100, 80);
+}
+
+.editInput .ant-form-item-label > label {
+  color: #a1a1a1; /* Цвет текста заголовка */
+  font-weight: bold; /* Жирный текст */
+}
+
+/* Стиль для Input */
+.editInput .ant-input {
+  background-color: #1e1e1e; /* Темный фон */
+  color: #a1a1a1; /* Цвет текста */
+  border: 1px solid #bc4a00; /* Граница */
+}
+
+/* Стиль для placeholder */
+.editInput .ant-input::placeholder {
+  color: #a1a1a1; /* Цвет placeholder */
+  opacity: 1; /* Сделать placeholder полностью видимым */
+}

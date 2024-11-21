@@ -1,0 +1,4 @@
+@WeaponAdminApi_HostAddress = http://localhost:3004
+
+GET {{WeaponOAdminApi_HostAddress}}/admins/search?query=admin
+Accept: application/json
