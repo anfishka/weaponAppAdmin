@@ -28,23 +28,23 @@ const Sidebar: React.FC = () => {
       {/* Секция 1: Список добавленных товаров */}
       <Menu.Item key="1" style={{ marginTop: "20px" }}>
         <NavLink to="/products" style={{ color: "inherit" }}>
-          🛒 Список добавленных товаров
+          🛒 Товары
         </NavLink>
       </Menu.Item>
 
       {/* Секция 2: Товары для добавления */}
       <Menu.Item key="2">
         <NavLink to="/upload-invoice" style={{ color: "inherit" }}>
-          📄 Товары для добавления 
+          📄 Накладные
         </NavLink>
       </Menu.Item>
 
-      {/* Секция 3: Детальная информация и редактирование 
+      {/* Секция 3: Детальная информация и редактирование */}
       <Menu.Item key="3">
-        <NavLink to="/edit-product" style={{ color: "inherit" }}>
+        <NavLink to="/edit-product/:id" style={{ color: "inherit" }}>
           ✏️ Редактирование товара
         </NavLink>
-      </Menu.Item>*/}
+      </Menu.Item>
     </Menu>
   );
 };

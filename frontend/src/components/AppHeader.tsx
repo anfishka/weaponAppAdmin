@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Layout, Input, message } from "antd";
-import { Link } from "react-router-dom";
+import { Layout, Input, Button, Spin, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 
 const { Header } = Layout;
-const { Search } = Input;
 
 interface Product {
   id: number;
@@ -14,46 +13,30 @@ interface Product {
   imageUrl?: string;
 }
 
-// Пример данных
-const mockData: Product[] = [
-  {
-    id: 1,
-    name: "АК-47",
-    category: "Огнестрельное оружие",
-    model: "AKM",
-    description: "Легендарный автомат с высокой надёжностью",
-    imageUrl: "https://via.placeholder.com/100",
-  },
-  {
-    id: 2,
-    name: "Катана 'Хищник'",
-    category: "Холодное оружие",
-    model: "Katana-X",
-    description: "Традиционный японский меч с идеально заточенным клинком",
-    imageUrl: "https://via.placeholder.com/100",
-  },
-  {
-    id: 3,
-    name: "Глок 17",
-    category: "Огнестрельное оружие",
-    model: "G17",
-    description: "Компактный пистолет с магазином на 17 патронов",
-    imageUrl: "https://via.placeholder.com/100",
-  },
-];
+interface AppHeaderProps {
+  products: Product[]; // Данные из API
+}
 
-const AppHeader: React.FC = () => {
-  const [searchText, setSearchText] = useState<string>("");
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(mockData);
+const AppHeader: React.FC<AppHeaderProps> = ({ products }) => {
+  const [searchText, setSearchText] = useState<string>(""); // Текст ввода
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]); // Результаты поиска
+  const [loading, setLoading] = useState<boolean>(false); // Индикатор загрузки
+  const navigate = useNavigate(); // Для навигации между страницами
 
-  const handleSearch = (value: string) => {
-    setSearchText(value);
+  const performSearch = (query: string) => {
+    if (!query.trim()) {
+      setFilteredProducts([]); // Очищаем результаты, если запрос пустой
+      return;
+    }
 
-    const filtered = mockData.filter(
+    setLoading(true);
+
+    const filtered = products.filter(
       (product) =>
-        product.name.toLowerCase().includes(value.toLowerCase()) ||
-        product.category.toLowerCase().includes(value.toLowerCase()) ||
-        (product.model && product.model.toLowerCase().includes(value.toLowerCase()))
+        product.name.toLowerCase().includes(query.toLowerCase()) ||
+        product.category.toLowerCase().includes(query.toLowerCase()) ||
+        (product.model && product.model.toLowerCase().includes(query.toLowerCase())) ||
+        product.id.toString().includes(query)
     );
 
     if (filtered.length > 0) {
@@ -62,6 +45,20 @@ const AppHeader: React.FC = () => {
       message.error("Товары не найдены");
       setFilteredProducts([]);
     }
+
+    setLoading(false);
+  };
+
+  // Обработчик изменения текста поиска
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchText(value); // Обновление текста
+    performSearch(value); // Автопоиск при изменении
+  };
+
+  // Обработчик нажатия кнопки "Поиск"
+  const handleSearchClick = () => {
+    performSearch(searchText); // Выполняем поиск
   };
 
   return (
@@ -72,7 +69,6 @@ const AppHeader: React.FC = () => {
           justifyContent: "space-between",
           alignItems: "center",
           backgroundColor: "rgb(0, 21, 41)",
-          border: "1px solid #eee",
           borderRadius: 5,
           padding: "0 20px",
         }}
@@ -88,12 +84,28 @@ const AppHeader: React.FC = () => {
           Weapon - Product Panel
         </Link>
 
-        <Search
-          placeholder="Введите название, категорию или модель"
-          enterButton="Поиск"
-          onSearch={handleSearch}
-          style={{ maxWidth: 400 }}
-        />
+        {/* Поле поиска с кнопкой */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <Spin spinning={loading}>
+            <Input
+              placeholder="Введите название, категорию или модель"
+              size="middle"
+              value={searchText}
+              onChange={handleInputChange} // Автопоиск при вводе текста
+              style={{ maxWidth: 400 }}
+            />
+          </Spin>
+          <Button
+            type="primary"
+            style={{
+              backgroundColor: "rgb(0, 120, 95)",
+              border: "none",
+            }}
+            onClick={handleSearchClick} // Поиск при нажатии на кнопку
+          >
+            Поиск
+          </Button>
+        </div>
       </Header>
 
       {/* Результаты поиска */}
@@ -102,24 +114,29 @@ const AppHeader: React.FC = () => {
         {filteredProducts.length > 0 ? (
           <ul style={{ listStyleType: "none", padding: 0 }}>
             {filteredProducts.map((product) => (
-              <li key={product.id} style={{ marginBottom: "10px" }}>
-                <Link
-                  to={`/product/${product.id}`}
-                  style={{
-                    padding: "10px",
-                    display: "block",
-                    background: "#f5f5f5",
-                    borderRadius: "5px",
-                    color: "black", // Устанавливаем начальный цвет текста
-                    textDecoration: "none", // Убираем подчеркивание
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = "black")} // Цвет при наведении
-                  onMouseLeave={(e) => (e.currentTarget.style.color = "black")} // Цвет при убирании курсора
-                >
-                
+              <li
+                key={product.id}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
+              >
+                <div>
                   <strong>ID:</strong> {product.id}, <strong>Название:</strong> {product.name},{" "}
                   <strong>Категория:</strong> {product.category}
-                </Link>
+                </div>
+                <Button
+                  type="primary"
+                  onClick={() => navigate(`/product/${product.id}`)}
+                  style={{
+                    backgroundColor: "rgb(0, 120, 95)",
+                    border: "none",
+                  }}
+                >
+                  Подробнее
+                </Button>
               </li>
             ))}
           </ul>

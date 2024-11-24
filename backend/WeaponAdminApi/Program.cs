@@ -1,59 +1,75 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using WeaponAdminApi.Entities; // Пространство имён для сущностей
+using WeaponAdminApi.Entities;
+using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Добавляем DbContext для работы с базой данных
+// Добавляем DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureSqlDb")));
 
-// Настройка контроллеров с использованием Newtonsoft.Json
+// Проверка подключения
+var connectionString = builder.Configuration.GetConnectionString("AzureSqlDb");
+try
+{
+    using (var connection = new SqlConnection(connectionString))
+    {
+        connection.Open();
+        Console.WriteLine("Подключение к Azure SQL Server установлено успешно!");
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Ошибка подключения: {ex.Message}");
+}
+
+// Настройка контроллеров и JSON
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
     {
         options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
     });
 
-// Добавление Swagger для тестирования API
+// Добавление Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Настройка CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAllOrigins", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:3002")
+              .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .WithExposedHeaders("Content-Length");
     });
 });
 
-
 var app = builder.Build();
 
-// Конфигурация Middleware
+// Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();
 
-// Добавляем обработку запросов для поиска товаров
-app.MapGet("/products/search", async (string? query, AppDbContext context) =>
+// Поиск продуктов
+app.MapGet("/products/search", async ([FromQuery] string? query, AppDbContext context) =>
 {
     if (string.IsNullOrEmpty(query))
     {
         return Results.BadRequest("Search query cannot be empty.");
     }
 
-    // Поиск товаров по названию или категории
     var products = await context.Products
         .Where(p =>
             p.Name.Contains(query) ||
@@ -70,16 +86,12 @@ app.MapGet("/products/search", async (string? query, AppDbContext context) =>
         })
         .ToListAsync();
 
-    if (!products.Any())
+    if (products.Count == 0)
     {
         return Results.NotFound("No products found matching the query.");
     }
 
     return Results.Ok(products);
-})
-.WithName("SearchProducts")
-.Produces(200)
-.Produces(404)
-.Produces(400);
+});
 
 app.Run();

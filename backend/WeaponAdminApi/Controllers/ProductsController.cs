@@ -33,6 +33,21 @@ namespace WeaponAdminApi.Controllers
             return Ok(product);
         }
 
+        [HttpGet("by-admin/{adminId}")]
+        public async Task<IActionResult> GetProductsByAdmin(int adminId)
+        {
+            var products = await _context.Products
+                .Where(p => p.AdminId == adminId)
+                .ToListAsync();
+
+            if (products.Count == 0)
+            {
+                return NotFound($"No products found for Admin ID {adminId}");
+            }
+
+            return Ok(products);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddProduct(Product product)
         {
@@ -100,6 +115,8 @@ namespace WeaponAdminApi.Controllers
             return NoContent();
         }
     
+
+
     /*
     [HttpPost]
     public async Task<IActionResult> AddProduct(Product product, [FromHeader] string Authorization)

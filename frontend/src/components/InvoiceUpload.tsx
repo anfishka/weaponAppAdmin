@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Table, Button, Input, Form, Switch, message } from "antd";
+import { Table, Button, Input, Form, message } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import axios from "axios";
 
-const { Search } = Input;
+
 
 interface Product {
   id: number;
@@ -41,23 +42,11 @@ const mockData: Product[] = [
 ];
 
 const InvoiceAndProducts: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>(mockData); // Мок-данные
+  const [products, setProducts] = useState<Product[]>(mockData); // Текущие данные продуктов
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(mockData); // Отфильтрованные товары
   const [form] = Form.useForm();
-  const [generatedDescription, setGeneratedDescription] = useState<string | undefined>("");
-  const [generatedImage, setGeneratedImage] = useState<string | undefined>("");
+  const [loading, setLoading] = useState<boolean>(false); // Состояние загрузки
 
-
-  // Добавление нового товара
-  const addProduct = (values: Omit<Product, "id">) => {
-    const newProduct: Product = {
-      id: Math.max(...products.map((p) => p.id), 0) + 1, // Генерация ID
-      ...values,
-    };
-    setProducts([...products, newProduct]);
-    setFilteredProducts([...products, newProduct]); // Обновляем также отфильтрованные данные
-    form.resetFields(); // Очистить форму после добавления
-  };
   const handleGenerate = async () => {
     const name = form.getFieldValue("name");
 
@@ -68,10 +57,33 @@ const InvoiceAndProducts: React.FC = () => {
 
     // Имитируем GPT-запрос
     setTimeout(() => {
-      setGeneratedDescription(`Сгенерированное описание для ${name}`);
-      setGeneratedImage("https://via.placeholder.com/150");
+      form.setFieldsValue({
+        description: `Сгенерированное описание для ${name}`,
+        imageUrl: "https://via.placeholder.com/150",
+      });
       message.success("Данные успешно сгенерированы");
     }, 1000);
+  };
+
+  // Отправка данных на сервер
+  const addProduct = async (values: Omit<Product, "id">) => {
+    setLoading(true);
+    try {
+      const response = await axios.post("https://localhost:7208/api/Products", values, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const newProduct = response.data; // Новый продукт с ID от сервера
+      setProducts([...products, newProduct]);
+      setFilteredProducts([...products, newProduct]);
+      form.resetFields();
+      message.success("Товар успешно добавлен!");
+    } catch (error: any) {
+      console.error("Ошибка при добавлении товара:", error);
+      message.error("Не удалось добавить товар.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Колонки таблицы
@@ -96,12 +108,11 @@ const InvoiceAndProducts: React.FC = () => {
       dataIndex: "description",
       key: "description",
     },
+    
   ];
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px", padding: "20px" }}>
-    
-
       {/* Основной контент */}
       <div style={{ display: "flex", gap: "20px" }}>
         {/* Таблица слева */}
@@ -136,15 +147,14 @@ const InvoiceAndProducts: React.FC = () => {
             <Form.Item
               label={<span style={{ color: "white" }}>Название</span>}
               name="name"
-              
+              rules={[{ required: true, message: "Введите название товара!" }]}
             >
               <Input />
             </Form.Item>
             <Form.Item
               label={<span style={{ color: "white" }}>Категория</span>}
               name="category"
-            
-            
+              rules={[{ required: true, message: "Введите категорию товара!" }]}
             >
               <Input />
             </Form.Item>
@@ -157,12 +167,33 @@ const InvoiceAndProducts: React.FC = () => {
             <Form.Item label={<span style={{ color: "white" }}>URL изображения</span>} name="imageUrl">
               <Input />
             </Form.Item>
-            <Button type="primary" htmlType="submit">
+            <Form.Item label={<span style={{ color: "white" }}>isVisible</span>} name="isVisible">
+              <Input />
+            </Form.Item>
+             {/*TODELETE */}
+           
+            <Form.Item label={<span style={{ color: "white" }}>adminId</span>} name="adminId">
+              <Input />
+            </Form.Item>
+            <Form.Item label={<span style={{ color: "white" }}>adminName</span>} name="adminName">
+              <Input />
+            </Form.Item>
+                  {/*TODELETE  */}
+            <Button type="primary" htmlType="submit" loading={loading}>
               Добавить товар
             </Button>
-            <Button type="dashed" onClick={handleGenerate} style={{ marginLeft: "10px", color:"rgb(0, 100, 80)", fontWeight:600, border:"3px solid rgb(0, 100, 80)" }}>
-          Сгенерировать с GPT
-        </Button>
+            <Button
+              type="dashed"
+              onClick={handleGenerate}
+              style={{
+                marginLeft: "10px",
+                color: "rgb(0, 100, 80)",
+                fontWeight: 600,
+                border: "3px solid rgb(0, 100, 80)",
+              }}
+            >
+              Сгенерировать с GPT
+            </Button>
           </Form>
         </div>
       </div>
@@ -171,3 +202,4 @@ const InvoiceAndProducts: React.FC = () => {
 };
 
 export default InvoiceAndProducts;
+
