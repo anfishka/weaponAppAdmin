@@ -23,6 +23,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ id, name, description, catego
   Выбрать
   </Link>
   </div>
+  
 );
 
 export default ProductCard;
