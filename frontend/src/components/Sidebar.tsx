@@ -45,6 +45,8 @@ const Sidebar: React.FC = () => {
           ✏️ Редактирование товара
         </NavLink>
       </Menu.Item>
+
+  
     </Menu>
   );
 };

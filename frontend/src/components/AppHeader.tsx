@@ -129,13 +129,13 @@ const AppHeader: React.FC<AppHeaderProps> = ({ products }) => {
                 </div>
                 <Button
                   type="primary"
-                  onClick={() => navigate(`/product/${product.id}`)}
+                  onClick={() => navigate(`/edit-product/${product.id}`)}
                   style={{
                     backgroundColor: "rgb(0, 120, 95)",
                     border: "none",
                   }}
                 >
-                  Подробнее
+                  Выбрать
                 </Button>
               </li>
             ))}
