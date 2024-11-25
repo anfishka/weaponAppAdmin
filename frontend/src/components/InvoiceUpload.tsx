@@ -15,6 +15,9 @@ interface Product {
   adminName?: string;
 }
 
+const apiKey = process.env.OPENAI_API_KEY;
+
+
 const mockAdmin = {
   adminId: 17, // ID администратора
   adminName: "Дмитрий Смирнов", // Имя администратора
@@ -55,7 +58,7 @@ const InvoiceAndProducts: React.FC = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer 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`, // Замените на ваш API-ключ
+            Authorization: `apiKey`, // Замените на ваш API-ключ
           },
         }
       );
@@ -74,7 +77,7 @@ const InvoiceAndProducts: React.FC = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer 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`, // Замените на ваш API-ключ
+            Authorization: apiKey, // Замените на ваш API-ключ
           },
         }
       );
