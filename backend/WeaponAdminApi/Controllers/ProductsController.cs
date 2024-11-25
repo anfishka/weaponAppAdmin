@@ -124,23 +124,22 @@ namespace WeaponAdminApi.Controllers
         var token = Authorization.Replace("Bearer ", "");
         var adminId = ExtractAdminIdFromToken(token);
 
-        // Проверяем администратора через API админов
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ API пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         var client = _httpClientFactory.CreateClient("AdminsApi");
         var response = await client.GetAsync($"admins/{adminId}");
 
         if (!response.IsSuccessStatusCode)
         {
-            return Unauthorized("Администратор деактивирован или не существует.");
+            return Unauthorized("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.");
         }
 
-        // Проверка прошла, продолжаем
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         product.CreatedAt = DateTime.UtcNow;
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
 
         return Ok(product);
     }*/
-
 
 
 
