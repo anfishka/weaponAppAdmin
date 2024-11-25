@@ -40,7 +40,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("https://agreeable-ground-0c4bd8403.5.azurestaticapps.net", "https://ambitious-ocean-0eab55e03.5.azurestaticapps.net", "https://gentle-tree-06ebec603.5.azurestaticapps.net")
+        policy.WithOrigins("https://agreeable-ground-0c4bd8403.5.azurestaticapps.net", "https://ambitious-ocean-0eab55e03.5.azurestaticapps.net", "https://gentle-tree-06ebec603.5.azurestaticapps.net", "localhost:3000", "localhost:3001", "localhost:3002")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .WithExposedHeaders("Content-Length");
