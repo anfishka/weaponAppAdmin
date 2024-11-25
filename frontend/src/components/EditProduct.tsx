@@ -24,7 +24,7 @@ const EditProduct: React.FC = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get<Product>(`https://localhost:7208/api/Products/${id}`);
+        const response = await axios.get<Product>(`https://weaponadminapi20241125032218.azurewebsites.net/api/products/${id}`);
         setProduct(response.data);
         form.setFieldsValue(response.data);
       } catch (error) {
@@ -59,7 +59,7 @@ const EditProduct: React.FC = () => {
       }
 
       // Отправка PATCH-запроса
-      await axios.patch(`https://localhost:7208/api/Products/${id}`, patchDoc, {
+      await axios.patch(`https://weaponadminapi20241125032218.azurewebsites.net/api/products/${id}`, patchDoc, {
         headers: { "Content-Type": "application/json-patch+json" },
       });
 
